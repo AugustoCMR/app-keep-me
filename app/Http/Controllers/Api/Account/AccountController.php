@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api\Account;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Models\Account;
 use App\Repositories\Account\AccountRepository;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
@@ -14,6 +14,8 @@ class AccountController extends Controller
 
     public function __construct(AccountRepository $repository)
     {
+        $this->middleware('auth:api');
+
         $this->repository = $repository;
     }
 
@@ -46,6 +48,10 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         $account = $this->repository->create($request->all());
+
+        $user = auth('api')->user();
+
+        $user->accounts()->attach($account->id);
 
         return response()->json($account, 201);
     }
