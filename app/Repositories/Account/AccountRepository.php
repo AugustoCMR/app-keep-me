@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Repositories\Account;
+
+use App\Models\Account;
+use App\Repositories\BaseRepository;
+
+class AccountRepository extends BaseRepository
+{
+    public function __construct(Account $model)
+    {
+        parent::__construct($model);
+    }
+}
