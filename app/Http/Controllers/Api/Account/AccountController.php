@@ -74,9 +74,17 @@ class AccountController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAccountRequest $request, Account $account)
+    public function update(Request $request, int $id)
     {
+        $account = $this->repository->find($id);
 
+        if (empty($account)) {
+            return response()->json(['message' => 'Account not found'], 404);
+        }
+
+        $account->update($request->all());
+
+        return response()->json($account, 200);
     }
 
     /**
@@ -91,7 +99,9 @@ class AccountController extends Controller
             return response()->json(['message' => 'No account found'], 404);
         }
 
-        $this->repository->delete($id);
+        $userId = auth('api')->id();
+
+        $account->users()->detach($userId);
 
         return response()->noContent();
     }
