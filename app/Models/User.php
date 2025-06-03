@@ -66,4 +66,14 @@ class User extends Authenticatable implements JWTSubject
             'account_id'
         )->withTimestamps();
     }
+
+    public function categories()
+    {
+        return $this->belongsToMany(
+            Category::class,
+            'category_user',
+            'user_id',
+            'category_id'
+        )->withTimestamps();
+    }
 }
