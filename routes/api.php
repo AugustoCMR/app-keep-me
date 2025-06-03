@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Account\AccountController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Category\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function () {
@@ -12,3 +13,4 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::apiResource('accounts', AccountController::class);
+Route::apiResource('categories', CategoryController::class);
