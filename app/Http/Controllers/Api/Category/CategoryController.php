@@ -39,9 +39,9 @@ class CategoryController extends Controller
     {
         $category = $this->repository->create($request->all());
 
-//        $user = auth('api')->user();
+        $user = auth('api')->user();
 
-//        $user->accounts()->attach($category->id);
+        $user->categories()->attach($category->id);
 
         return response()->json($category, 201);
     }
@@ -89,11 +89,9 @@ class CategoryController extends Controller
             return response()->json(['message' => 'Category not found'], 404);
         }
 
-//        $userId = auth('api')->id();
-//
-//        $category->users()->detach($userId);
+        $userId = auth('api')->id();
 
-        $category->delete();
+        $category->users()->detach($userId);
 
         return response()->noContent();
     }
