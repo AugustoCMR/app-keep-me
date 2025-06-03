@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Api\Account;
 
-use Illuminate\Routing\Controller;
-use App\Http\Requests\UpdateAccountRequest;
-use App\Models\Account;
 use App\Repositories\Account\AccountRepository;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
 class AccountController extends Controller
 {
@@ -28,7 +26,7 @@ class AccountController extends Controller
 
         if($accounts->isEmpty())
         {
-            return response()->json(['message' => 'No accounts found'], 200);
+            return response()->json(['message' => 'Accounts not found'], 200);
         }
 
         return response()->json($accounts, 200);
@@ -65,7 +63,7 @@ class AccountController extends Controller
 
         if(empty($account))
         {
-            return response()->json(['message' => 'No account found'], 404);
+            return response()->json(['message' => 'Account not found'], 404);
         }
 
         return response()->json($account, 200);
@@ -96,7 +94,7 @@ class AccountController extends Controller
 
         if(empty($account))
         {
-            return response()->json(['message' => 'No account found'], 404);
+            return response()->json(['message' => 'Account not found'], 404);
         }
 
         $userId = auth('api')->id();
