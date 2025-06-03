@@ -1,13 +1,14 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Account\AccountController;
+use App\Http\Controllers\Api\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
-
 });
+
+Route::apiResource('accounts', AccountController::class);
