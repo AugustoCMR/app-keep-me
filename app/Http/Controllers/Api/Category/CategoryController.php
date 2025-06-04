@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Api\Category;
 
-use App\Repositories\Category\CategoryRepository;
+use App\Services\Category\CategoryService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class CategoryController extends Controller
 {
-    protected CategoryRepository $repository;
+    protected CategoryService $service;
 
-    public function __construct(CategoryRepository $repository)
+    public function __construct(CategoryService $service)
     {
         $this->middleware('auth:api');
 
-        $this->repository = $repository;
+        $this->service = $service;
     }
 
     /**
@@ -22,14 +23,16 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = $this->repository->all();
-
-        if($categories->isEmpty())
+        try
         {
-            return response()->json(['message' => 'Categories not found'], 200);
-        }
+            $categories = $this->service->getAll();
 
-        return response()->json($categories, 200);
+            return response()->json($categories, 200);
+        }
+        catch (Exception $e)
+        {
+            return response()->json(['message' => $e->getMessage()], 505);
+        }
     }
 
     /**
@@ -37,13 +40,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $category = $this->repository->create($request->all());
-
-        $user = auth('api')->user();
-
-        $user->categories()->attach($category->id);
-
-        return response()->json($category, 201);
+        try
+        {
+            $category = $this->service->createCategoryAndAttachToUser($request->all());
+            return response()->json($category, 201);
+        }
+        catch (Exception $e)
+        {
+            return response()->json(['message' => $e->getMessage()], 505);
+        }
     }
 
     /**
@@ -51,14 +56,16 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        $category = $this->repository->find($id);
-
-        if(empty($category))
+        try
         {
-            return response()->json(['message' => 'Category not found'], 404);
-        }
+            $category = $this->service->findById($id);
 
-        return response()->json($category, 200);
+            return response()->json($category, 200);
+        }
+        catch (Exception $e)
+        {
+            return response()->json(['message' => $e->getMessage()], 505);
+        }
     }
 
     /**
@@ -66,15 +73,16 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $category = $this->repository->find($id);
+        try
+        {
+            $category = $this->service->update($request->all(), $id);
 
-        if (empty($category)) {
-            return response()->json(['message' => 'Category not found'], 404);
+            return response()->json($category, 200);
         }
-
-        $category->update($request->all());
-
-        return response()->json($category, 200);
+        catch (Exception $e)
+        {
+            return response()->json(['message' => $e->getMessage()], 505);
+        }
     }
 
     /**
@@ -82,17 +90,15 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $category = $this->repository->find($id);
-
-        if(empty($category))
+        try
         {
-            return response()->json(['message' => 'Category not found'], 404);
+            $this->service->detachCategoryFromUser($id);
+
+            return response()->noContent();
         }
-
-        $userId = auth('api')->id();
-
-        $category->users()->detach($userId);
-
-        return response()->noContent();
+        catch (Exception $e)
+        {
+            return response()->json(['message' => $e->getMessage()], 505);
+        }
     }
 }
