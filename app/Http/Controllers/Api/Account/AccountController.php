@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Api\Account;
 
 use App\Repositories\Account\AccountRepository;
+use App\Services\Account\AccountService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class AccountController extends Controller
 {
-    protected AccountRepository $repository;
+    protected AccountService $service;
 
-    public function __construct(AccountRepository $repository)
+    public function __construct(AccountService $service)
     {
         $this->middleware('auth:api');
 
-        $this->repository = $repository;
+        $this->service = $service;
     }
 
     /**
@@ -22,22 +23,9 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $accounts = $this->repository->all();
-
-        if($accounts->isEmpty())
-        {
-            return response()->json(['message' => 'Accounts not found'], 200);
-        }
+        $accounts = $this->service->getAll();
 
         return response()->json($accounts, 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-
     }
 
     /**
@@ -45,26 +33,18 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        $account = $this->repository->create($request->all());
-
-        $user = auth('api')->user();
-
-        $user->accounts()->attach($account->id);
+        $account = $this->service->createAccountAndAttachToUser($request->all());
 
         return response()->json($account, 201);
     }
 
     /**
      * Display the specified resource.
+     * @throws \Exception
      */
     public function show(int $id)
     {
-        $account = $this->repository->find($id);
-
-        if(empty($account))
-        {
-            return response()->json(['message' => 'Account not found'], 404);
-        }
+        $account = $this->service->findById($id);
 
         return response()->json($account, 200);
     }
@@ -74,13 +54,7 @@ class AccountController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $account = $this->repository->find($id);
-
-        if (empty($account)) {
-            return response()->json(['message' => 'Account not found'], 404);
-        }
-
-        $account->update($request->all());
+        $account = $this->service->update($request->all(), $id);
 
         return response()->json($account, 200);
     }
@@ -90,16 +64,12 @@ class AccountController extends Controller
      */
     public function destroy(int $id)
     {
-        $account = $this->repository->find($id);
+        $this->service->detachAccountFromUser($id);
 
         if(empty($account))
         {
             return response()->json(['message' => 'Account not found'], 404);
         }
-
-        $userId = auth('api')->id();
-
-        $account->users()->detach($userId);
 
         return response()->noContent();
     }
