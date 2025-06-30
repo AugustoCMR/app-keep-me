@@ -2,40 +2,45 @@
 
 namespace App\Services\Category;
 
-use App\Models\Category;
+use App\Exceptions\ApiException;
 use App\Repositories\Category\CategoryRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\JsonResponse;
 
 class CategoryService
 {
-    private $repository;
+    private CategoryRepository $repository;
     public function __construct(CategoryRepository $repository)
     {
         $this->repository = $repository;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getAll(): Collection
     {
         $categories = $this->repository->all();
 
         if($categories->isEmpty())
         {
-            throw new Exception('Categories not found');
+            throw new ApiException('Categories not found', 404);
         }
 
         return $categories;
     }
 
+    /**
+     * @throws Exception
+     */
     public function findById(int $id): Model
     {
         $category = $this->repository->find($id);
 
         if(empty($category))
         {
-            throw new Exception('Category not found');
+            throw new ApiException('Category not found', 404);
         }
 
         return $category;
@@ -58,7 +63,7 @@ class CategoryService
 
         if (empty($category))
         {
-            throw new Exception('Category not found');
+            throw new ApiException('Category not found', 404);
         }
 
         $this->repository->update($data, $id);
@@ -72,7 +77,7 @@ class CategoryService
 
         if(empty($category))
         {
-            throw new Exception('Category not found');
+            throw new ApiException('Category not found', 404);
         }
 
         $userId = auth('api')->id();

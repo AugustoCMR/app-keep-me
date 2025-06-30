@@ -23,16 +23,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        try
-        {
-            $categories = $this->service->getAll();
+        $categories = $this->service->getAll();
 
-            return response()->json($categories, 200);
-        }
-        catch (Exception $e)
-        {
-            return response()->json(['message' => $e->getMessage()], 505);
-        }
+        return response()->json($categories, 200);
     }
 
     /**
@@ -40,32 +33,19 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        try
-        {
-            $category = $this->service->createCategoryAndAttachToUser($request->all());
-            return response()->json($category, 201);
-        }
-        catch (Exception $e)
-        {
-            return response()->json(['message' => $e->getMessage()], 505);
-        }
+        $category = $this->service->createCategoryAndAttachToUser($request->all());
+        return response()->json($category, 201);
     }
 
     /**
      * Display the specified resource.
+     * @throws Exception
      */
     public function show(string $id)
     {
-        try
-        {
-            $category = $this->service->findById($id);
+        $category = $this->service->findById($id);
 
-            return response()->json($category, 200);
-        }
-        catch (Exception $e)
-        {
-            return response()->json(['message' => $e->getMessage()], 505);
-        }
+        return response()->json($category, 200);
     }
 
     /**
@@ -73,16 +53,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        try
-        {
-            $category = $this->service->update($request->all(), $id);
+        $category = $this->service->update($request->all(), $id);
 
-            return response()->json($category, 200);
-        }
-        catch (Exception $e)
-        {
-            return response()->json(['message' => $e->getMessage()], 505);
-        }
+        return response()->json($category, 200);
     }
 
     /**
@@ -90,15 +63,9 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        try
-        {
-            $this->service->detachCategoryFromUser($id);
 
-            return response()->noContent();
-        }
-        catch (Exception $e)
-        {
-            return response()->json(['message' => $e->getMessage()], 505);
-        }
+        $this->service->detachCategoryFromUser($id);
+
+        return response()->noContent();
     }
 }
