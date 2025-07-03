@@ -19,7 +19,16 @@ class IncomeController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/incomes",
+     *     summary="List incomes",
+     *     tags={"Incomes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List incomes"
+     *     )
+     * )
      */
     public function index()
     {
