@@ -23,7 +23,9 @@ class IncomeController extends Controller
      */
     public function index()
     {
-        //
+        $incomes = $this->service->getAll();
+
+        return response()->json($incomes, 200);
     }
 
     /**
@@ -31,30 +33,37 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $income = $this->service->create($request->all());
+        return response()->json($income, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Income $income)
+    public function show(string $id)
     {
-        //
+        $income = $this->service->findById($id);
+
+        return response()->json($income, 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Income $income)
+    public function update(Request $request, string $id)
     {
-        //
+        $income = $this->service->update($request->all(), $id);
+
+        return response()->json($income, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Income $income)
+    public function destroy(string $id)
     {
-        //
+        $this->service->delete($id);
+
+        return response()->noContent();
     }
 }
