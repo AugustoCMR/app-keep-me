@@ -9,4 +9,6 @@ class Income extends Model
 {
     /** @use HasFactory<\Database\Factories\IncomeFactory> */
     use HasFactory;
+
+    protected $fillable = ['description', 'amount', 'account_id', 'category_id', 'user_id'];
 }
