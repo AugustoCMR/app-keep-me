@@ -3,7 +3,6 @@
 namespace App\Services\Income;
 
 use App\Exceptions\ApiException;
-use App\Repositories\Category\CategoryRepository;
 use App\Repositories\Income\IncomeRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,14 +21,14 @@ class IncomeService
      */
     public function getAll(): Collection
     {
-        $categories = $this->repository->all();
+        $incomes = $this->repository->all();
 
-        if($categories->isEmpty())
+        if($incomes->isEmpty())
         {
-            throw new ApiException('Categories not found', 404);
+            throw new ApiException('Incomes not found', 404);
         }
 
-        return $categories;
+        return $incomes;
     }
 
     /**
@@ -37,54 +36,46 @@ class IncomeService
      */
     public function findById(int $id): Model
     {
-        $category = $this->repository->find($id);
+        $income = $this->repository->find($id);
 
-        if(empty($category))
+        if(empty($income))
         {
-            throw new ApiException('Category not found', 404);
+            throw new ApiException('Income not found', 404);
         }
 
-        return $category;
+        return $income;
     }
 
-    public function createCategoryAndAttachToUser(array $data): Model
+    public function create(array $data): Model
     {
-        $category = $this->repository->create($data);
+        $income = $this->repository->create($data);
 
-        $user = auth('api')->user();
-
-        $user->categories()->attach($category->id);
-
-        return $category;
+        return $income;
     }
 
     public function update(array $data, int $id): Model
     {
-        $category = $this->repository->find($id);
+        $income = $this->repository->find($id);
 
-        if (empty($category))
+        if (empty($income))
         {
-            throw new ApiException('Category not found', 404);
+            throw new ApiException('Income not found', 404);
         }
 
         $this->repository->update($data, $id);
 
-        return $category;
+        return $income->refresh();
     }
 
-    public function detachCategoryFromUser(int $id): void
+    public function delete(int $id): void
     {
-        $category = $this->repository->find($id);
+        $income = $this->repository->find($id);
 
-        if(empty($category))
+        if(empty($income))
         {
-            throw new ApiException('Category not found', 404);
+            throw new ApiException('Income not found', 404);
         }
 
-        $userId = auth('api')->id();
-
-        $category->users()->detach($userId);
-
-
+        $income->delete();
     }
 }
