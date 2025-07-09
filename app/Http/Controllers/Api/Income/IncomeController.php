@@ -27,7 +27,21 @@ class IncomeController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="List incomes"
-     *     )
+     *     ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="No incomes",
+     *          @OA\JsonContent (
+     *              @OA\Property(property="message", type="string", example="Incomes not found")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *           response=401,
+     *           description="Unauthorized",
+     *           @OA\JsonContent (
+     *               @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *           )
+     *       )
      * )
      */
     public function index()
@@ -38,7 +52,44 @@ class IncomeController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/incomes",
+     *     summary="Create income",
+     *     tags={"Incomes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"description", "amount", "account_id", "user_id", "category_id"},
+     *             @OA\Property(property="description", type="string", example="wallet"),
+     *             @OA\Property(property="amount", type="numeric", example=500),
+     *             @OA\Property(property="account_id", type="integer", example=1),
+     *             @OA\Property(property="user_id", type="integer", example=1),
+     *             @OA\Property(property="category_id", type="integer", example=3)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Income created successfully.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="description", type="string", example="salary"),
+     *             @OA\Property(property="amount", type="numeric", example="5000"),
+     *             @OA\Property(property="account_id", type="integer", example=1),
+     *             @OA\Property(property="user_id", type="integer", example=1),
+     *             @OA\Property(property="category_id", type="integer", example=1),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
+     * )
      */
     public function store(Request $request)
     {
