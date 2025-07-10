@@ -31,21 +31,6 @@ class IncomeService
         return $incomes;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function findById(int $id): Model
-    {
-        $income = $this->repository->find($id);
-
-        if(empty($income))
-        {
-            throw new ApiException('Income not found', 404);
-        }
-
-        return $income;
-    }
-
     public function create(array $data): Model
     {
         $income = $this->repository->create($data);
@@ -57,25 +42,8 @@ class IncomeService
     {
         $income = $this->repository->find($id);
 
-        if (empty($income))
-        {
-            throw new ApiException('Income not found', 404);
-        }
-
         $this->repository->update($data, $id);
 
         return $income->refresh();
-    }
-
-    public function delete(int $id): void
-    {
-        $income = $this->repository->find($id);
-
-        if(empty($income))
-        {
-            throw new ApiException('Income not found', 404);
-        }
-
-        $income->delete();
     }
 }
