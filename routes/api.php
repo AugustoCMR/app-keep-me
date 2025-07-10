@@ -15,4 +15,5 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::apiResource('accounts', AccountController::class);
 Route::apiResource('categories', CategoryController::class);
-Route::apiResource('incomes', IncomeController::class);
+Route::apiResource('incomes', IncomeController::class)
+    ->where(['income' => '[0-9]+']);
