@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Income;
 
+use App\Http\Requests\Income\StoreIncomeRequest;
 use Illuminate\Routing\Controller;
 use App\Models\Income;
 use App\Services\Income\IncomeService;
@@ -91,8 +92,10 @@ class IncomeController extends Controller
      *     )
      * )
      */
-    public function store(Request $request)
+    public function store(StoreIncomeRequest $request)
     {
+        $request->validated();
+
         $income = $this->service->create($request->all());
         return response()->json($income, 201);
     }
@@ -100,18 +103,18 @@ class IncomeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Income $income)
     {
-        $income = $this->service->findById($id);
-
         return response()->json($income, 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreIncomeRequest $request, string $id)
     {
+        $request->validated();
+
         $income = $this->service->update($request->all(), $id);
 
         return response()->json($income, 200);
@@ -120,9 +123,9 @@ class IncomeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Income $income)
     {
-        $this->service->delete($id);
+        $income->delete();
 
         return response()->noContent();
     }
