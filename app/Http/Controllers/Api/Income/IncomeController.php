@@ -23,7 +23,7 @@ class IncomeController extends Controller
      * @OA\Get(
      *     path="/api/incomes",
      *     summary="List incomes",
-     *     tags={"Incomes"},
+     *     tags={"Income"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
@@ -56,7 +56,7 @@ class IncomeController extends Controller
      * @OA\Post(
      *     path="/api/incomes",
      *     summary="Create income",
-     *     tags={"Incomes"},
+     *     tags={"Income"},
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
@@ -75,7 +75,7 @@ class IncomeController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="id", type="integer", example=1),
      *             @OA\Property(property="description", type="string", example="salary"),
-     *             @OA\Property(property="amount", type="numeric", example="5000"),
+     *             @OA\Property(property="amo   unt", type="numeric", example="5000"),
      *             @OA\Property(property="account_id", type="integer", example=1),
      *             @OA\Property(property="user_id", type="integer", example=1),
      *             @OA\Property(property="category_id", type="integer", example=1),
@@ -101,7 +101,23 @@ class IncomeController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/incomes/{id}",
+     *     summary="Get income by ID",
+     *     tags={"Income"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="Income ID"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List incomes"
+     *     )
+     * )
      */
     public function show(Income $income)
     {
@@ -109,7 +125,34 @@ class IncomeController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     * path="/api/incomes/{id}",
+     * summary="Update income",
+     * tags={"Income"},
+     * security={{"bearerAuth":{}}},
+     * @OA\RequestBody(
+     * required=true,
+     * @OA\JsonContent(
+     * required={"description", "amount", "account_id", "user_id", "category_id"},
+     * @OA\Property(property="description", type="string", example="wallet"),
+     * @OA\Property(property="amount", type="numeric", example=500),
+     * @OA\Property(property="account_id", type="integer", example=1),
+     * @OA\Property(property="user_id", type="integer", example=1),
+     * @OA\Property(property="category_id", type="integer", example=3)
+     * )
+     * ),
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="Income ID"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Update income"
+     *     )
+     * )
      */
     public function update(StoreIncomeRequest $request, string $id)
     {
@@ -121,7 +164,23 @@ class IncomeController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     * path="/api/incomes/{id}",
+     * summary="Delete income",
+     * tags={"Income"},
+     * security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="Income ID"
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Delete income"
+     *     )
+     * )
      */
     public function destroy(Income $income)
     {
