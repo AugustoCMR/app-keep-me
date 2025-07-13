@@ -156,7 +156,7 @@
         "/api/incomes": {
             "get": {
                 "tags": [
-                    "Incomes"
+                    "Income"
                 ],
                 "summary": "List incomes",
                 "operationId": "8cfe87f7aad63a14a786036e5c5ad273",
@@ -205,7 +205,7 @@
             },
             "post": {
                 "tags": [
-                    "Incomes"
+                    "Income"
                 ],
                 "summary": "Create income",
                 "operationId": "5525624437bbc61fd1aa6e3e1722e2c3",
@@ -263,7 +263,7 @@
                                             "type": "string",
                                             "example": "salary"
                                         },
-                                        "amount": {
+                                        "amo   unt": {
                                             "type": "numeric",
                                             "example": "5000"
                                         },
@@ -318,6 +318,131 @@
                     }
                 ]
             }
+        },
+        "/api/incomes/{id}": {
+            "get": {
+                "tags": [
+                    "Income"
+                ],
+                "summary": "Get income by ID",
+                "operationId": "544d75e5e14f448417dcf9fe819105c6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Income ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List incomes"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Income"
+                ],
+                "summary": "Update income",
+                "operationId": "a3e911ba4f065a07cede48c7b678117e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Income ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "description",
+                                    "amount",
+                                    "account_id",
+                                    "user_id",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "description": {
+                                        "type": "string",
+                                        "example": "wallet"
+                                    },
+                                    "amount": {
+                                        "type": "numeric",
+                                        "example": 500
+                                    },
+                                    "account_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Update income"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Income"
+                ],
+                "summary": "Delete income",
+                "operationId": "9c766b11270ee8eab283883fd1dca134",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Income ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete income"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -336,8 +461,8 @@
             "description": "Autenticação"
         },
         {
-            "name": "Incomes",
-            "description": "Incomes"
+            "name": "Income",
+            "description": "Income"
         }
     ]
 }
