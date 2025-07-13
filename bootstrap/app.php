@@ -27,5 +27,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 'message' => 'Resource not found.',
             ], $e->getStatusCode());
         });
+        $exceptions->renderable(function (Throwable $e, $request) {
+            return response()->json([
+                'message' => 'Internal server error.',
+            ], 500);
+        });
     })->create();
 
